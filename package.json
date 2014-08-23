@@ -1,0 +1,15 @@
+{
+  "name": "gremlin-console",
+  "main": "Gruntfile.js",
+  "description": "Gremlin Console",
+  "repository": {
+    "type": "git",
+    "url": "http://stash.shelterinsurance.com/scm/dc/direct.git"
+  },
+  "license": "Commercial",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jasmine": "~0.7.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

@@ -22,3 +22,27 @@ dependencies {
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.6'
+        classpath 'com.moowork.gradle:gradle-node-plugin:0.6'
+    }
+}
+
+apply plugin: 'com.moowork.grunt'
+apply plugin: 'com.moowork.node'
+
+// node and NPM will be automatically installed if necessary
+node {
+    version = '0.10.25'
+    download = true
+}
+
+// makes sure that grunt is installed, and process package.json before running grunt build
+grunt_test.dependsOn(['installGrunt', 'npmInstall'])
+
+test.dependsOn grunt_test

@@ -5,7 +5,7 @@ var force = cola.d3adaptor()
     .size([width, height])
     .flowLayout('y',75)
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#graph").append("svg")
     .attr("width", width)
     .attr("height", height)
     .style("pointer-events", "all")

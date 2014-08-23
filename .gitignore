@@ -1,3 +1,5 @@
 /build
 /.idea
 *.iml
+*SpecRunner.html
+/node_modules
