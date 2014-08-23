@@ -1,0 +1,24 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = "Main"
+
+run.dependsOn test
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    all*.exclude module: 'groovy' // in favor of groovy-all
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.6'
+    compile 'com.google.guava:guava:17.0'
+
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+}
