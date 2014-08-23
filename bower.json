@@ -1,0 +1,15 @@
+{
+  "name": "dependency-tree",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "jQuery": "latest",
+    "bootstrap": "latest",
+    "d3": "latest",
+    "webcola": "latest"
+  }
+}

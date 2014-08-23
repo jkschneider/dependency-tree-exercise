@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <style>
+    .node circle {
+       cursor: pointer;
+       stroke-width: 4;
+    }
+
+    .node text {
+        font: 16px sans-serif;
+        font-weight: bold;
+        fill: white;
+        cursor: pointer;
+    }
+
+    .link {
+        stroke: #999;
+        stroke-opacity: .6;
+        stroke-width: 2;
+        marker-end: url(#end-arrow);
+    }
+
+    .background {
+        stroke: gray;
+        stroke-width: 1px;
+        fill: none;
+    }
+    </style>
+
+    <title>Dependency Tree</title>
+    <script src="bower_components/d3/d3.min.js"></script>
+    <script src="bower_components/webcola/WebCola/cola.v3.min.js"></script>
+
+</head>
+<body>
+    <script src="js/forceLayout.js"></script>
+</body>
+</html>
