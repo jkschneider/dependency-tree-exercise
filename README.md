@@ -1,13 +1,18 @@
 Dependency Tree Exercise
 ========================
 
-Executing `gradle run` will compile, run tests, and run `DependencyHierarchyWriter` against `graph.txt`.
-
 ### Assumption
 
 There is only one root and it appears first in the file as the parent of a dependency relationship.
 
-### Output
+### Graphical rendering
+
+Visit http://bl.ocks.org/jkschneider/c7660044fe74ab9ee53e.
+
+### Console-based rendering
+
+Executing `gradle run` will compile, run tests, and run `DependencyHierarchyWriter` against `graph.txt`.  The output is as follows:
+
 
     A                    
     |_ B                 
@@ -75,3 +80,4 @@ There is only one root and it appears first in the file as the parent of a depen
        |     \_ L        
        |        \_ I (cycle)
        \_ Q
+       
