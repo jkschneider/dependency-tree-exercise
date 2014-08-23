@@ -3,6 +3,10 @@ Dependency Tree Exercise
 
 Executing `gradle run` will compile, run tests, and run `DependencyHierarchyWriter` against `graph.txt`.
 
+### Assumption
+
+There is only one root and it appears first in the file as the parent of a dependency relationship.
+
 ### Output
 
     A                    
