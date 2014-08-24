@@ -55,11 +55,10 @@ d3.dsv("->",'text/plain')('graph.txt')
         var links = rows.map(function(row) {
             var sourceNode = nodes.filter(function(n) { return n.name == row.link.source })[0]
             var targetNode = nodes.filter(function(n) { return n.name == row.link.target })[0]
-
-            if(row.link.source == 'A')
-                console.log(row.link.target)
             return { source: sourceNode, target: targetNode }
         })
+
+        var distMatrix = floydWarshall(nodes, links, function(d) { return d.name })
 
         force
           .nodes(nodes)
@@ -81,16 +80,16 @@ d3.dsv("->",'text/plain')('graph.txt')
 
         nodeEnter.append("circle")
             .attr("r", 16)
+            .on("click", function(d) { colorNodes(node, distMatrix, d) })
 
         nodeEnter.append("text")
             .attr("text-anchor", "middle")
             .attr("dy", ".35em")
             .text(function(d) { return d.name })
+            .on("click", function(d) { colorNodes(node, distMatrix, d) })
 
         // TODO hardcoded the root here... a more sophisticated solution would determine the root(s)
-        node.selectAll("circle")
-            .style("fill", function(d) { return d.name == 'A' ? '#d90000' : '#666' })
-            .style("stroke", function(d) { return d3.rgb(d.name == 'A' ? '#d90000' : '#666').darker(2) })
+        colorNodes(node, distMatrix, { name: 'A' })
 
         force.on("tick", function() {
             link.attr("d", function (d) {
@@ -102,3 +101,26 @@ d3.dsv("->",'text/plain')('graph.txt')
             node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")" })
         })
     })
+
+function colorNodes(nodeSelection, distMatrix, focus) {
+    console.log(focus)
+
+    var colorByDistance = d3.scale.ordinal()
+        .range([
+            d3.rgb(0,104,55),
+            d3.rgb(102,189,99),
+            d3.rgb(217,239,139),
+            d3.rgb(254,224,139),
+            d3.rgb(244,109,67),
+            d3.rgb(165,0,38)
+        ])
+
+    var nodeColor = function(node) {
+        var dist = distMatrix.dist(focus, node)
+        return d3.rgb(dist == Infinity ? '#666' : colorByDistance(dist))
+    }
+
+    nodeSelection.selectAll("circle")
+        .style("fill", nodeColor)
+        .style("stroke", function(d) { return nodeColor(d).darker(2) })
+}
