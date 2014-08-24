@@ -119,7 +119,7 @@ var colorByDistance = d3.scale.ordinal().domain([0,5]).range(colorbrewer.RdBu[6]
 function focusOnNode(focus, node, edgeLabelPath, distMatrix) {
     var nodeColor = function(node) {
         var dist = distMatrix.dist(focus, node)
-        return d3.rgb(dist == Infinity ? '#666' : colorByDistance(dist))
+        return d3.rgb(dist == Infinity ? '#666' : colorByDistance(Math.min(dist, 4)))
     }
 
     node.selectAll("circle")
