@@ -1,13 +1,22 @@
 describe('Floyd-Warshall all pairs shortest path algorithm', function() {
-    it('Calculate an all pairs shortest matrix', function() {
-        testGraph('A', 'B', 'C', 'D', function(d) { return d })
+    it('Calculate the all pairs shortest matrix', function() {
+        testDistance('A', 'B', 'C', 'D', function(d) { return d })
+        testDistance({name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, function(d) { return d.name })
     })
 
-    it('Calculate an all pairs shortest matrix against a nested property', function() {
-        testGraph({name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, function(d) { return d.name })
-    })
+//    it('Calculate shortest path between two vertices', function() {
+//        testGraph({name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, function(d) { return d.name })
+//    })
 
-    function testGraph(A, B, C, D, accessor) {
+    function testDistance(A, B, C, D, accessor) {
+        var distMatrix = buildMatrix(A, B, C, D, accessor)
+        expect(distMatrix.dist(A,B)).toBe(1)
+        expect(distMatrix.dist(A,C)).toBe(1)
+        expect(distMatrix.dist(A,D)).toBe(2)
+        expect(distMatrix.dist(B,A)).toBe(Infinity)
+    }
+
+    function buildMatrix(A, B, C, D, accessor) {
         var vertices = [A,B,C,D]
         var edges = [
             {source: A, target: B},
@@ -16,11 +25,6 @@ describe('Floyd-Warshall all pairs shortest path algorithm', function() {
             {source: C, target: D}
         ]
 
-        var distMatrix = floydWarshall(vertices, edges, accessor)
-
-        expect(distMatrix.dist(A,B)).toBe(1)
-        expect(distMatrix.dist(A,C)).toBe(1)
-        expect(distMatrix.dist(A,D)).toBe(2)
-        expect(distMatrix.dist(B,A)).toBe(Infinity)
+        return floydWarshall(vertices, edges, accessor)
     }
 })

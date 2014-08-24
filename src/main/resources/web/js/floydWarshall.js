@@ -3,17 +3,34 @@ function floydWarshall(vertices, edges, accessor) {
 
     var dm = new function() { // the all pairs shortest path distance matrix
         var self = this
-        this.matrix = []
+        this.distMatrix = []
+        this.next = []
         this.max = 0
 
         this.dist = function(v1, v2) {
-            return self.matrix[[accessor(v1),accessor(v2)]]
+            return self.distMatrix[[accessor(v1),accessor(v2)]]
         }
 
         this.set = function(v1, v2, val) {
             if(val > self.max && val != Infinity)
                 self.max = val
-            self.matrix[[accessor(v1), accessor(v2)]] = val
+            self.distMatrix[[accessor(v1), accessor(v2)]] = val
+        }
+
+        this.setNext = function(v1, v2, v) {
+            self.next[[accessor(v1), accessor(v2)]] = v
+        }
+
+        this.next = function(v1, v2) {
+            return self.next[[accessor(v1), accessor(v2)]]
+        }
+
+        this.path = function(u, v) {
+            if(!next(u,v)) return []
+            var path = [u]
+            for(; u != v; u = next(u,v))
+                path.push(u)
+            return path
         }
     }()
 
@@ -31,14 +48,19 @@ function floydWarshall(vertices, edges, accessor) {
         dm.set(v1, v1, 0)
     }
 
-    for(var i = 0; i < edges.length; i++)
-        dm.set(edges[i].source, edges[i].target, 1)
+    for(var i = 0; i < edges.length; i++) {
+        var u = edges[i].source, v = edges[i].target
+        dm.set(u, v, 1)
+        dm.setNext(u, v, v)
+    }
 
     for(var k = 0; k < vertices.length; k++) {
         for(var i = 0; i < vertices.length; i++) {
             for(var j = 0; j < vertices.length; j++) {
-                if(dist(i,j) > dist(i,k) + dist(k,j))
+                if(dist(i,j) > dist(i,k) + dist(k,j)) {
                     dm.set(vertices[i], vertices[j], dist(i,k) + dist(k,j))
+                    dm.setNext(vertices[i], vertices[j], dm.next(vertices[i], vertices[k]))
+                }
             }
         }
     }

@@ -7,7 +7,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "jQuery": "latest",
+    "colorbrewer": "latest",
     "bootstrap": "latest",
     "d3": "latest",
     "webcola": "latest"

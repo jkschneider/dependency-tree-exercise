@@ -70,6 +70,17 @@ d3.dsv("->",'text/plain')('graph.txt')
 
         link.enter().append("svg:path")
             .attr("class", "link")
+            .attr("id", function(d) { return d.source.index + "_" + d.target.index })
+
+        var edgeLabelText = viewport.selectAll(".edgeLabel")
+            .data(links)
+          .enter().append("svg:text")
+            .attr("class", "edgeLabel")
+
+        var edgeLabelPath = edgeLabelText.append("svg:textPath")
+            .attr("text-anchor", "middle")
+            .attr("xlink:href", function(d) { return "#" + d.source.index + "_" + d.target.index })
+            .attr("startOffset", "60%")
 
         var node = viewport.selectAll(".node")
             .data(nodes)
@@ -80,16 +91,17 @@ d3.dsv("->",'text/plain')('graph.txt')
 
         nodeEnter.append("circle")
             .attr("r", 16)
-            .on("click", function(d) { colorNodes(node, distMatrix, d) })
+            .on("click", function(d) { focusOnNode(d, node,  edgeLabelPath, distMatrix) })
 
         nodeEnter.append("text")
-            .attr("text-anchor", "middle")
+            .attr("text-anchor", "right")
+            .attr("dx", "-2em")
             .attr("dy", ".35em")
             .text(function(d) { return d.name })
-            .on("click", function(d) { colorNodes(node, distMatrix, d) })
+            .on("click", function(d) { focusOnNode(d, node,  edgeLabelPath, distMatrix) })
 
         // TODO hardcoded the root here... a more sophisticated solution would determine the root(s)
-        colorNodes(node, distMatrix, { name: 'A' })
+        focusOnNode({ name: 'A' }, node, edgeLabelPath, distMatrix)
 
         force.on("tick", function() {
             link.attr("d", function (d) {
@@ -102,25 +114,19 @@ d3.dsv("->",'text/plain')('graph.txt')
         })
     })
 
-function colorNodes(nodeSelection, distMatrix, focus) {
-    console.log(focus)
+var colorByDistance = d3.scale.ordinal().domain([0,5]).range(colorbrewer.RdBu[6])
 
-    var colorByDistance = d3.scale.ordinal()
-        .range([
-            d3.rgb(0,104,55),
-            d3.rgb(102,189,99),
-            d3.rgb(217,239,139),
-            d3.rgb(254,224,139),
-            d3.rgb(244,109,67),
-            d3.rgb(165,0,38)
-        ])
-
+function focusOnNode(focus, node, edgeLabelPath, distMatrix) {
     var nodeColor = function(node) {
         var dist = distMatrix.dist(focus, node)
         return d3.rgb(dist == Infinity ? '#666' : colorByDistance(dist))
     }
 
-    nodeSelection.selectAll("circle")
+    node.selectAll("circle")
         .style("fill", nodeColor)
         .style("stroke", function(d) { return nodeColor(d).darker(2) })
+
+    edgeLabelPath.text(function(d) {
+        return distMatrix.dist(focus, d.source) + distMatrix.dist(d.source, d.target)
+    })
 }

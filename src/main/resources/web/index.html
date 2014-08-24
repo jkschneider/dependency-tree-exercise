@@ -2,6 +2,8 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <title>Dependency Tree</title>
+
     <style>
     .node circle {
        cursor: pointer;
@@ -11,7 +13,7 @@
     .node text {
         font: 16px sans-serif;
         font-weight: bold;
-        fill: white;
+        fill: black;
         cursor: pointer;
     }
 
@@ -27,11 +29,19 @@
         stroke-width: 1px;
         fill: none;
     }
+
+    .edgeLabel {
+        fill: #333;
+        font: 9px sans-serif;
+        pointer-events: none;
+    }
     </style>
 
-    <title>Dependency Tree</title>
+    <link type="text/css" rel="stylesheet" href="bower_components/colorbrewer/colorbrewer.css">
+
     <script src="bower_components/d3/d3.min.js"></script>
     <script src="bower_components/webcola/WebCola/cola.v3.min.js"></script>
+    <script src="bower_components/colorbrewer/colorbrewer.js"></script>
 
     <script src="js/floydWarshall.js"></script>
 </head>
