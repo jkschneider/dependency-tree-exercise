@@ -4,7 +4,7 @@ function floydWarshall(vertices, edges, accessor) {
     var dm = new function() { // the all pairs shortest path distance matrix
         var self = this
         this.distMatrix = []
-        this.next = []
+        this.nextMatrix = []
         this.max = 0
 
         this.dist = function(v1, v2) {
@@ -18,18 +18,22 @@ function floydWarshall(vertices, edges, accessor) {
         }
 
         this.setNext = function(v1, v2, v) {
-            self.next[[accessor(v1), accessor(v2)]] = v
+            self.nextMatrix[[accessor(v1), accessor(v2)]] = v
         }
 
         this.next = function(v1, v2) {
-            return self.next[[accessor(v1), accessor(v2)]]
+            return self.nextMatrix[[accessor(v1), accessor(v2)]]
         }
 
         this.path = function(u, v) {
-            if(!next(u,v)) return []
-            var path = [u]
-            for(; u != v; u = next(u,v))
+            if(!self.next(u,v)) return []
+            var path = []
+            for(; u != v; u = self.next(u,v))
                 path.push(u)
+
+            for(var i = 0; i < path.length; i++)
+                path[i] = { source: path[i], target: i == path.length-1 ? v : path[i+1] }
+
             return path
         }
     }()

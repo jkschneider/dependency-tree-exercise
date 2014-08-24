@@ -1,4 +1,4 @@
-var width = 1024, height = 800
+var width = 1024, height = 1024
 
 var force = cola.d3adaptor()
     .linkDistance(100)
@@ -20,6 +20,8 @@ svg.append('rect')
 
 var viewport = svg.append('g')
 
+var focusedNode = null
+
 svg.append('svg:defs').append('svg:marker')
     .attr('id', 'end-arrow')
     .attr('viewBox', '0 -5 10 10')
@@ -29,7 +31,7 @@ svg.append('svg:defs').append('svg:marker')
   .append('svg:path')
     .attr("d", "M0,-5L10,0L0,5")
     .attr('stroke-width', '0px')
-    .attr('fill', '#999')
+    .attr('fill', '#666')
 
 var lineFunction = d3.svg.line()
     .x(function (d) { return d.x })
@@ -92,6 +94,7 @@ d3.dsv("->",'text/plain')('graph.txt')
         nodeEnter.append("circle")
             .attr("r", 16)
             .on("click", function(d) { focusOnNode(d, node,  edgeLabelPath, distMatrix) })
+            .on("mouseover", function(d) { focusOnPath(d, link, distMatrix) })
 
         nodeEnter.append("text")
             .attr("text-anchor", "right")
@@ -116,13 +119,31 @@ d3.dsv("->",'text/plain')('graph.txt')
 
 var colorByDistance = d3.scale.ordinal().domain([0,5]).range(colorbrewer.RdBu[6])
 
+function focusOnPath(focusDep, link, distMatrix) {
+    var shortestPath = distMatrix.path(focusedNode, focusDep)
+
+    var inPath = function(d) {
+        var intersection = shortestPath.filter(function(seg) {
+           return seg.source.name == d.source.name && seg.target.name ==  d.target.name
+        })
+        return intersection.length > 0
+    }
+
+    link
+      .style("stroke", function(d) { return inPath(d) ? 'magenta' : '#999' })
+      .style("stroke-opacity", function(d) { return inPath(d) ? 1 : 0.6 })
+}
+
 function focusOnNode(focus, node, edgeLabelPath, distMatrix) {
+    focusedNode = focus
+
     var nodeColor = function(node) {
         var dist = distMatrix.dist(focus, node)
         return d3.rgb(dist == Infinity ? '#666' : colorByDistance(Math.min(dist, 4)))
     }
 
     node.selectAll("circle")
+        .transition()
         .style("fill", nodeColor)
         .style("stroke", function(d) { return nodeColor(d).darker(2) })
 

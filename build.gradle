@@ -44,5 +44,3 @@ node {
 
 // makes sure that grunt is installed, and process package.json before running grunt build
 grunt_test.dependsOn(['installGrunt', 'npmInstall'])
-
-test.dependsOn grunt_test

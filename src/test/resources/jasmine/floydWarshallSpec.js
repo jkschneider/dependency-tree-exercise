@@ -4,9 +4,22 @@ describe('Floyd-Warshall all pairs shortest path algorithm', function() {
         testDistance({name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, function(d) { return d.name })
     })
 
-//    it('Calculate shortest path between two vertices', function() {
-//        testGraph({name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, function(d) { return d.name })
-//    })
+    it('Calculate shortest path between two vertices', function() {
+        var distMatrix = buildMatrix('A', 'B', 'C', 'D')
+        var path = distMatrix.path('A', 'D')
+
+        expect(path.length).toBe(2)
+        expect(path[0].source).toBe('A')
+        expect(path[0].target).toBe('C')
+        expect(path[1].source).toBe('C')
+        expect(path[1].target).toBe('D')
+
+        path = distMatrix.path('A', 'A') // zero length path
+        expect(path.length).toBe(0)
+
+        path = distMatrix.path('B', 'A') // path does not exist
+        expect(path.length).toBe(0)
+    })
 
     function testDistance(A, B, C, D, accessor) {
         var distMatrix = buildMatrix(A, B, C, D, accessor)
